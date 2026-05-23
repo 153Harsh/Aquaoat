@@ -130,8 +130,8 @@ html[xmlns] .clearfix {
 	cursor: pointer;
 	z-index: 999;
 	top: 3px;
-	width: 27px;
-	height: 52px;
+	width: 54px;
+	height: 54px;
 	visibility: visible;
 }
 .right_arrow {
@@ -140,9 +140,25 @@ html[xmlns] .clearfix {
 	right: 40px;
 	cursor: pointer;
 	z-index: 999;
-	width: 27px;
-	height: 52px;
+	width: 54px;
+	height: 54px;
 	visibility: visible;
+}
+.left_arrow img,
+.right_arrow img {
+	width: 100%;
+	height: 100%;
+	display: block;
+
+	/* reduce black flash during first-time paint / decoding */
+	background-color: transparent;
+	object-fit: contain;
+}
+
+/* Keep arrows visible space even during image decode */
+.left_arrow,
+.right_arrow {
+	background-color: transparent;
 }
 .reference {
 	-webkit-transition-duration: 200ms;
@@ -201,17 +217,20 @@ html[xmlns] .clearfix {
 .slides.active {
 	background-color: #0674bc;
 }
+
+
 .box_btn {
 	background-color: #FFFFFF;
 	background-image: url(open.png);
-	background-position: 1px -1px;
+	background-position: center center;
 	background-repeat: no-repeat;
+	background-size: 50px 30px;
 	position: absolute;
 	bottom: 0px;
 	left: 38px;
 	display: block;
-	width: 56px;
-	height: 20px;
+	width: 96px;
+	height: 50px;
 	border-radius: 5px 5px 0 0;
 	border: 1px solid #231F20;
 	border-bottom: none;
@@ -233,7 +252,7 @@ html[xmlns] .clearfix {
 }
 .active > .box_btn {
 	background-image: url(close.png);
-	bottom: 157px;
+	bottom: 135px;
 }
 
 #myconsole {

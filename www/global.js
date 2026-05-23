@@ -239,11 +239,11 @@ localStorage.setItem("currentslide",page_id); */
 
   $("#wrapper").attr("rel", page_id);
 
-  var content = "";
   if (flag == 0) {
-    var pg_content = set_pg_content(page_id);
+    // Only update existing DOM to avoid full HTML replacement flicker
+    // (previous approach used $('#main_content').html(pg_content);)
 
-    $("#main_content").html(pg_content);
+    changeSlide(page_id);
   }
   //console.log("pg : "+page_id);
   if (page_id == 5) {
@@ -271,51 +271,83 @@ localStorage.setItem("currentslide",page_id); */
   }
   checkClickThrough();
 }
+function changeSlide(page_id) {
 
+    $(".reference").removeClass("active");
+
+    currentSlide();
+
+    const imgPath =
+        `slide${page_id}/1.jpg`;
+
+    const cssPath =
+        `slide${page_id}/slide${page_id}.css`;
+
+    const preImg = new Image();
+
+    preImg.onload = function () {
+
+        // CHANGE ONLY IMAGE SRC
+        $("#main_slide_img")
+            .attr("src", imgPath);
+
+        // CHANGE CSS FILE
+        $("#dynamic_slide_css")
+            .attr("href", cssPath);
+
+    };
+
+    preImg.src = imgPath;
+}
 function set_pg_content(pg_id) {
   $(".reference").removeClass("active");
   currentSlide();
+
+  // Instead of returning a full HTML string (which forces DOM replacement and can cause a black flash),
+
+
+  /* legacy code (kept below) */
   var selectedContentPath = "";
   switch (pg_id) {
     case 1:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide1/slide1.css" media="screen"/><div class="background"><img src="slide1/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div> ';
+        '<link rel="stylesheet" type="text/css" href="slide1/slide1.css" media="screen"/><div class="background"><img src="slide1/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div> ';
       break;
     case 2:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide2/slide2.css" media="screen"/><div class="background"><img src="slide2/1.png" width="1024" height="768"></div><div class="title1" class="frameopen" ></div> ';
+        '<link rel="stylesheet" type="text/css" href="slide2/slide2.css" media="screen"/><div class="background"><img src="slide2/1.jpg" width="1024" height="768"></div><div class="title1" class="frameopen" ></div> ';
       break;
     case 3:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide3/slide3.css" media="screen"/><div class="background"><img src="slide3/1.png" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide3/slide3.css" media="screen"/><div class="background"><img src="slide3/1.jpg" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
       break;
     case 4:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide4/slide4.css" media="screen"/><div class="background"><img src="slide4/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide4/slide4.css" media="screen"/><div class="background"><img src="slide4/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
       break;
     case 5:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide5/slide5.css" media="screen"/><div class="background"><img src="slide5/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide5/slide5.css" media="screen"/><div class="background"><img src="slide5/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
       break;
     case 6:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide6/slide6.css" media="screen"/><div class="background"><img src="slide6/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide6/slide6.css" media="screen"/><div class="background"><img src="slide6/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
       break;
     case 7:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide7/slide7.css" media="screen"/><div class="background"><img src="slide7/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide7/slide7.css" media="screen"/><div class="background"><img src="slide7/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
       break;
     case 8:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide8/slide8.css" media="screen"/><div class="background"><img src="slide8/1.png" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide8/slide8.css" media="screen"/><div class="background"><img src="slide8/1.jpg" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
       break;
     case 9:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide9/slide9.css" media="screen"/><div class="background"><img src="slide9/1.png" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide9/slide9.css" media="screen"/><div class="background"><img src="slide9/1.jpg" width="1024" height="768"></div> <div class="title1" class="frameopen" ></div>  ';
       break;
     case 10:
       content =
-        '<link rel="stylesheet" type="text/css" href="slide10/slide10.css" media="screen"/><div class="background"><img src="slide10/1.png" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
+        '<link rel="stylesheet" type="text/css" href="slide10/slide10.css" media="screen"/><div class="background"><img src="slide10/1.jpg" width="1024" height="768"></div><div class="title1" class="frameopen" ></div>  ';
       break;
 
   }
@@ -377,10 +409,9 @@ function open_page(url, page_id) {
 	//step 10 ends here */
 
   $("#wrapper").attr("rel", page_id);
-  var content = "";
-  var pg_content = set_pg_content(page_id);
+ var content = "";
 
-  $("#main_content").html(pg_content);
+changeSlide(page_id);
 
   if (page_id == 4) {
     $(".box2").click(function (event) {
