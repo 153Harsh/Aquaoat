@@ -135,22 +135,35 @@ if (fs.existsSync(stringsPath)) {
   console.log('✅ Android App Name Updated');
 }
 // UPDATE IOS APP NAME
+// UPDATE IOS APP NAME
 const iosPath =
   'ios/App/App/Info.plist';
 
 if (fs.existsSync(iosPath)) {
+
   let plist = fs.readFileSync(
     iosPath,
     'utf8'
   );
 
+  // Update Display Name
   plist = plist.replace(
-    /<key>CFBundleDisplayName<\/key>\s*<string>.*<\/string>/,
+    /<key>CFBundleDisplayName<\/key>\s*<string>.*?<\/string>/,
     `<key>CFBundleDisplayName</key>
     <string>${appName}</string>`
   );
 
-  fs.writeFileSync(iosPath, plist);
+  // Update Bundle Name
+  plist = plist.replace(
+    /<key>CFBundleName<\/key>\s*<string>.*?<\/string>/,
+    `<key>CFBundleName</key>
+    <string>${appName}</string>`
+  );
+
+  fs.writeFileSync(
+    iosPath,
+    plist
+  );
 
   console.log('✅ iOS App Name Updated');
 }
