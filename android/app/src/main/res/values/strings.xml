@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Aquaoat</string>
+    <string name="app_name">QuizFlex</string>
     <string name="title_activity_main">Aquaoat</string>
     <string name="package_name">com.harsh.aquaoat</string>
     <string name="custom_url_scheme">com.harsh.aquaoat</string>
