@@ -169,7 +169,7 @@ if (fs.existsSync(iosPath)) {
 }
 
 
-// GENERATE ICONS
+/// GENERATE ICONS
 execSync(
   'npx capacitor-assets generate',
   { stdio: 'inherit' }
@@ -182,11 +182,23 @@ execSync(
   { stdio: 'inherit' }
 );
 
-console.log('🚀 Branding Complete!');
-// AUTO CLEAN ANDROID
+
+// CROSS PLATFORM CLEAN
+const isWindows =
+  process.platform === 'win32';
+
+const cleanCommand = isWindows
+  ? 'cd android && gradlew clean'
+  : 'cd android && ./gradlew clean';
+
 execSync(
-  'cd android && gradlew clean',
-  { stdio: 'inherit', shell: true }
+  cleanCommand,
+  {
+    stdio: 'inherit',
+    shell: true
+  }
 );
 
 console.log('✅ Android Clean Complete');
+
+console.log('🚀 Branding Complete!');
