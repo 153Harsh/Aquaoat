@@ -74,7 +74,7 @@ const ctx =
   canvas.getContext('2d');
 
 
-// TRANSPARENT BG
+// TRANSPARENT BACKGROUND
 ctx.clearRect(
   0,
   0,
@@ -185,6 +185,10 @@ if (
 
 if (isWindows) {
 
+  console.log(
+    '🟢 WINDOWS DETECTED'
+  );
+
   // UPDATE ANDROID NAME
 
   const stringsPath =
@@ -200,10 +204,18 @@ if (isWindows) {
         'utf8'
       );
 
+    // app_name
     strings =
       strings.replace(
-        /<string name="app_name">.*<\/string>/,
+        /<string name="app_name">.*?<\/string>/,
         `<string name="app_name">${appName}</string>`
+      );
+
+    // title_activity_main
+    strings =
+      strings.replace(
+        /<string name="title_activity_main">.*?<\/string>/,
+        `<string name="title_activity_main">${appName}</string>`
       );
 
     fs.writeFileSync(
@@ -247,7 +259,7 @@ if (isWindows) {
   );
 
   console.log(
-    '✅ Android Clean Complete'
+    '✅ Android Complete'
   );
 }
 
@@ -257,6 +269,10 @@ if (isWindows) {
 // ========================
 
 if (isMac) {
+
+  console.log(
+    '🍎 MAC DETECTED'
+  );
 
   // UPDATE IOS APP NAME
 
@@ -320,7 +336,7 @@ if (isMac) {
   );
 
   console.log(
-    '✅ iOS Sync Complete'
+    '✅ iOS Complete'
   );
 }
 
