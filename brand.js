@@ -3,59 +3,103 @@ const { createCanvas } = require('canvas');
 const fs = require('fs');
 
 
+// ========================
 // GET APP NAME
-const appName = process.argv[2] || 'AquaOat';
+// ========================
+
+const appName =
+  process.argv[2] || 'AquaOat';
 
 
+// ========================
+// PLATFORM CHECK
+// ========================
+
+const isWindows =
+  process.platform === 'win32';
+
+const isMac =
+  process.platform === 'darwin';
+
+
+// ========================
 // SHORT NAME LOGIC
+// ========================
+
 function getShortName(name) {
+
   name = name.trim();
 
-  const words = name.split(/\s+/);
+  const words =
+    name.split(/\s+/);
 
   // Quiz Flex → QF
   if (words.length >= 2) {
+
     return (
-      words[0][0] + words[1][0]
+      words[0][0] +
+      words[1][0]
     ).toUpperCase();
   }
 
   // AquaOat → AQ
-  const clean = name.replace(/[^a-zA-Z0-9]/g, '');
+  const clean =
+    name.replace(/[^a-zA-Z0-9]/g, '');
 
   if (clean.length >= 2) {
+
     return (
-      clean[0] + clean[1]
+      clean[0] +
+      clean[1]
     ).toUpperCase();
   }
 
   return clean.toUpperCase();
 }
 
-const shortName = getShortName(appName);
+const shortName =
+  getShortName(appName);
 
 
-// CANVAS
+// ========================
+// CREATE ICON
+// ========================
+
 const size = 1024;
 
-const canvas = createCanvas(size, size);
-const ctx = canvas.getContext('2d');
+const canvas =
+  createCanvas(size, size);
+
+const ctx =
+  canvas.getContext('2d');
 
 
-// TRANSPARENT BACKGROUND
-ctx.clearRect(0, 0, size, size);
+// TRANSPARENT BG
+ctx.clearRect(
+  0,
+  0,
+  size,
+  size
+);
 
 
 // LETTERS
-const chars = shortName.split('');
+const chars =
+  shortName.split('');
 
-ctx.font = 'bold 420px Arial';
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
+ctx.font =
+  'bold 420px Arial';
+
+ctx.textAlign =
+  'center';
+
+ctx.textBaseline =
+  'middle';
 
 
 // FIRST LETTER
-ctx.fillStyle = '#f97316';
+ctx.fillStyle =
+  '#f97316';
 
 ctx.fillText(
   chars[0] || '',
@@ -65,7 +109,8 @@ ctx.fillText(
 
 
 // SECOND LETTER
-ctx.fillStyle = '#2563eb';
+ctx.fillStyle =
+  '#2563eb';
 
 ctx.fillText(
   chars[1] || '',
@@ -76,129 +121,210 @@ ctx.fillText(
 
 // CREATE ASSETS FOLDER
 if (!fs.existsSync('assets')) {
+
   fs.mkdirSync('assets');
 }
 
 
 // SAVE ICON
-const buffer = canvas.toBuffer('image/png');
+const buffer =
+  canvas.toBuffer('image/png');
 
-fs.writeFileSync('assets/icon.png', buffer);
+fs.writeFileSync(
+  'assets/icon.png',
+  buffer
+);
 
-console.log(`✅ Icon Generated: ${shortName}`);
+console.log(
+  `✅ Icon Generated: ${shortName}`
+);
 
 
-// UPDATE CAPACITOR APP NAME
+// ========================
 // UPDATE CAPACITOR CONFIG
-// UPDATE capacitor.config.json
+// ========================
 
 const capacitorConfigPath =
   'capacitor.config.json';
 
-if (fs.existsSync(capacitorConfigPath)) {
+if (
+  fs.existsSync(
+    capacitorConfigPath
+  )
+) {
 
-  const config = JSON.parse(
-    fs.readFileSync(
-      capacitorConfigPath,
-      'utf8'
-    )
-  );
+  const config =
+    JSON.parse(
+      fs.readFileSync(
+        capacitorConfigPath,
+        'utf8'
+      )
+    );
 
-  config.appName = appName;
+  config.appName =
+    appName;
 
   fs.writeFileSync(
     capacitorConfigPath,
-    JSON.stringify(config, null, 2)
+    JSON.stringify(
+      config,
+      null,
+      2
+    )
   );
 
-  console.log('✅ Capacitor Config Updated');
+  console.log(
+    '✅ Capacitor Config Updated'
+  );
 }
 
 
-// UPDATE ANDROID APP NAME
-const stringsPath =
-  'android/app/src/main/res/values/strings.xml';
+// ========================
+// WINDOWS → ANDROID ONLY
+// ========================
 
-if (fs.existsSync(stringsPath)) {
-  let strings = fs.readFileSync(
-    stringsPath,
-    'utf8'
-  );
+if (isWindows) {
 
-  strings = strings.replace(
-    /<string name="app_name">.*<\/string>/,
-    `<string name="app_name">${appName}</string>`
-  );
+  // UPDATE ANDROID NAME
 
-  fs.writeFileSync(stringsPath, strings);
+  const stringsPath =
+    'android/app/src/main/res/values/strings.xml';
 
-  console.log('✅ Android App Name Updated');
-}
-// UPDATE IOS APP NAME
-// UPDATE IOS APP NAME
-const iosPath =
-  'ios/App/App/Info.plist';
+  if (
+    fs.existsSync(stringsPath)
+  ) {
 
-if (fs.existsSync(iosPath)) {
+    let strings =
+      fs.readFileSync(
+        stringsPath,
+        'utf8'
+      );
 
-  let plist = fs.readFileSync(
-    iosPath,
-    'utf8'
-  );
+    strings =
+      strings.replace(
+        /<string name="app_name">.*<\/string>/,
+        `<string name="app_name">${appName}</string>`
+      );
 
-  // Update Display Name
-  plist = plist.replace(
-    /<key>CFBundleDisplayName<\/key>\s*<string>.*?<\/string>/,
-    `<key>CFBundleDisplayName</key>
-    <string>${appName}</string>`
-  );
+    fs.writeFileSync(
+      stringsPath,
+      strings
+    );
 
-  // Update Bundle Name
-  plist = plist.replace(
-    /<key>CFBundleName<\/key>\s*<string>.*?<\/string>/,
-    `<key>CFBundleName</key>
-    <string>${appName}</string>`
-  );
-
-  fs.writeFileSync(
-    iosPath,
-    plist
-  );
-
-  console.log('✅ iOS App Name Updated');
-}
-
-
-/// GENERATE ICONS
-execSync(
-  'npx capacitor-assets generate',
-  { stdio: 'inherit' }
-);
-
-
-// SYNC
-execSync(
-  'npx cap sync',
-  { stdio: 'inherit' }
-);
-
-
-// CROSS PLATFORM CLEAN
-const isWindows =
-  process.platform === 'win32';
-
-const cleanCommand = isWindows
-  ? 'cd android && gradlew clean'
-  : 'cd android && ./gradlew clean';
-
-execSync(
-  cleanCommand,
-  {
-    stdio: 'inherit',
-    shell: true
+    console.log(
+      '✅ Android App Name Updated'
+    );
   }
+
+
+  // GENERATE ANDROID ICONS
+  execSync(
+    'npx capacitor-assets generate --android',
+    {
+      stdio: 'inherit',
+      shell: true
+    }
+  );
+
+
+  // SYNC ANDROID
+  execSync(
+    'npx cap sync android',
+    {
+      stdio: 'inherit',
+      shell: true
+    }
+  );
+
+
+  // CLEAN ANDROID
+  execSync(
+    'cd android && gradlew clean',
+    {
+      stdio: 'inherit',
+      shell: true
+    }
+  );
+
+  console.log(
+    '✅ Android Clean Complete'
+  );
+}
+
+
+// ========================
+// MAC → IOS ONLY
+// ========================
+
+if (isMac) {
+
+  // UPDATE IOS APP NAME
+
+  const iosPath =
+    'ios/App/App/Info.plist';
+
+  if (
+    fs.existsSync(iosPath)
+  ) {
+
+    let plist =
+      fs.readFileSync(
+        iosPath,
+        'utf8'
+      );
+
+    // DISPLAY NAME
+    plist =
+      plist.replace(
+        /<key>CFBundleDisplayName<\/key>\s*<string>.*?<\/string>/,
+        `<key>CFBundleDisplayName</key>
+<string>${appName}</string>`
+      );
+
+    // BUNDLE NAME
+    plist =
+      plist.replace(
+        /<key>CFBundleName<\/key>\s*<string>.*?<\/string>/,
+        `<key>CFBundleName</key>
+<string>${appName}</string>`
+      );
+
+    fs.writeFileSync(
+      iosPath,
+      plist
+    );
+
+    console.log(
+      '✅ iOS App Name Updated'
+    );
+  }
+
+
+  // GENERATE IOS ICONS
+  execSync(
+    'npx capacitor-assets generate --ios',
+    {
+      stdio: 'inherit',
+      shell: true
+    }
+  );
+
+
+  // SYNC IOS
+  execSync(
+    'npx cap sync ios',
+    {
+      stdio: 'inherit',
+      shell: true
+    }
+  );
+
+  console.log(
+    '✅ iOS Sync Complete'
+  );
+}
+
+
+console.log(
+  '🚀 Branding Complete!'
 );
-
-console.log('✅ Android Clean Complete');
-
-console.log('🚀 Branding Complete!');
